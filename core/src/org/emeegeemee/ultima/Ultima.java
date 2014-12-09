@@ -34,7 +34,7 @@ public class Ultima extends Game {
 		tileset = new Texture(tilesetFilename);
 		font = new BitmapFont();
 
-		tileFactory = new TileFactory(tileset, config.getTileConfig(), tileWidth, tileHeight, false);
+		tileFactory = new TileFactory(tileset, config.getTileConfig(), tileWidth, tileHeight);
 
 		setScreen(new MainMenuScreen(this));
 

@@ -6,20 +6,11 @@ import java.util.*;
  * Username: Justin
  * Date: 11/29/2014
  */
-public class TileConfig implements Iterable<Integer> {
-    private Set<Integer> valid;
+public class TileConfig {
     private Set<Integer> opaque;
     private Set<Integer> passable;
 
     private Map<Integer, Integer> heightMap;
-
-    public boolean isValid(int index) {
-        return valid.contains(index);
-    }
-
-    public int getNumberValid() {
-        return valid.size();
-    }
 
     public boolean isOpaque(int index) {
         return opaque.contains(index);
@@ -56,11 +47,6 @@ public class TileConfig implements Iterable<Integer> {
     }
 
     public String toString() {
-        return String.format("valid: %s%nopaque: %s%npassable: %s%nheightMap: %s", valid.toString(), opaque.toString(), passable.toString(), heightMap.toString());
-    }
-
-    @Override
-    public Iterator<Integer> iterator() {
-        return valid.iterator();
+        return String.format("opaque: %s%npassable: %s%nheightMap: %s", opaque.toString(), passable.toString(), heightMap.toString());
     }
 }

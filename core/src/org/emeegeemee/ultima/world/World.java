@@ -1,11 +1,11 @@
 package org.emeegeemee.ultima.world;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import org.emeegeemee.ultima.screen.GameScreen;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
+import org.emeegeemee.ultima.utils.Point2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,9 +72,9 @@ public class World {
         return tiles[0].length;
     }
 
-    public void draw(SpriteBatch batch, Vector2 pos) {
-        int x = (int)pos.x - radius;
-        int y = (int)pos.y - radius;
+    public void draw(SpriteBatch batch, Point2 pos) {
+        int x = pos.x - radius;
+        int y = pos.y - radius;
 
         for(int i = 0; i < GameScreen.TILES_WIDE; i++) {
             for (int j = 0; j < GameScreen.TILES_HIGH; j++) {
@@ -87,8 +87,8 @@ public class World {
         }
     }
 
-    public boolean isPassable(Vector2 pos) {
-        return tiles[(int)pos.x][(int)pos.y].isPassable();
+    public boolean isPassable(Point2 pos) {
+        return tiles[pos.x][pos.y].isPassable();
     }
 }
 

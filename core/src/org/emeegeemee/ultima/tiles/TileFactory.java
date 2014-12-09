@@ -15,7 +15,7 @@ public class TileFactory {
     private final TileConfig config;
     private final Map<Integer, ITile> tiles;//cache to enable flyweight
 
-    public TileFactory(Texture tileset, TileConfig config, int tileWidth, int tileHeight, boolean preBuild) {
+    public TileFactory(Texture tileset, TileConfig config, int tileWidth, int tileHeight) {
         TextureRegion[][] regions = TextureRegion.split(tileset, tileWidth, tileHeight);
         this.regions = new TextureRegion[regions.length * regions[0].length];
 
@@ -27,26 +27,12 @@ public class TileFactory {
             }
         }
 
+        tiles = new HashMap<>();
         this.config = config;
-        tiles = new HashMap<>(config.getNumberValid());
-
-        if(preBuild) {
-            buildCache();
-        }
-    }
-
-    public void buildCache() {
-        for(Integer i : config) {
-            if(tiles.get(i) == null) {
-                ITile tile = new Tile(regions[i], config.isOpaque(i), config.isPassable(i));
-                tiles.put(i, tile);
-            }
-        }
     }
 
     public ITile getTile(int index) {
-        assert config.isValid(index) && index >= 0 && index < regions.length :
-                String.format("index must be [0-%d) and be in the valid config list", regions.length);
+        assert index >= 0 && index < regions.length : String.format("index must be [0-%d)", regions.length);
 
         ITile tile = tiles.get(index);
 

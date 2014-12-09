@@ -11,6 +11,7 @@ import org.emeegeemee.ultima.terrain.DiamondSquare;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
+import org.emeegeemee.ultima.utils.Point2;
 import org.emeegeemee.ultima.world.World;
 
 /**
@@ -24,7 +25,7 @@ public class GameScreen extends ScreenAdapter {
     private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
 
-    private final Vector2 pos = new Vector2(RADIUS, RADIUS);
+    private final Point2 pos = new Point2(RADIUS, RADIUS);
     private final ITile player;
 
     private final Ultima game;
