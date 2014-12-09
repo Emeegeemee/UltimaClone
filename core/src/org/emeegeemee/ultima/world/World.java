@@ -64,15 +64,31 @@ public class World {
         }
     }
 
+    public int getWidth() {
+        return tiles.length;
+    }
+
+    public int getHeight() {
+        return tiles[0].length;
+    }
+
     public void draw(SpriteBatch batch, Vector2 pos) {
         int x = (int)pos.x - radius;
         int y = (int)pos.y - radius;
 
         for(int i = 0; i < GameScreen.TILES_WIDE; i++) {
             for (int j = 0; j < GameScreen.TILES_HIGH; j++) {
-                tiles[x + i][y + j].draw(batch, i * tileWidth, j * tileHeight);
+                int xi = x+i;
+                int yj = y+j;
+
+                if(xi >= 0 && yj >= 0 && xi < tiles.length && yj < tiles.length)
+                    tiles[x + i][y + j].draw(batch, i * tileWidth, j * tileHeight);
             }
         }
+    }
+
+    public boolean isPassable(Vector2 pos) {
+        return tiles[(int)pos.x][(int)pos.y].isPassable();
     }
 }
 

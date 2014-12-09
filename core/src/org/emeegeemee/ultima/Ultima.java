@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.emeegeemee.ultima.config.Configuration;
 import org.emeegeemee.ultima.screen.MainMenuScreen;
-import org.emeegeemee.ultima.tiles.TileConfig;
 import org.emeegeemee.ultima.tiles.TileFactory;
 
 public class Ultima extends Game {
@@ -15,14 +15,14 @@ public class Ultima extends Game {
 	private BitmapFont font;
 
 	private final String tilesetFilename;
-	private final TileConfig tileConfig;
+	private final Configuration config;
 	private final int tileWidth, tileHeight;
 	private final int worldSize;
 	private TileFactory tileFactory;
 
-	public Ultima(String tilesetFilename, TileConfig tileConfig, int tileWidth, int tileHeight, int worldSize) {
+	public Ultima(String tilesetFilename, Configuration config, int tileWidth, int tileHeight, int worldSize) {
 		this.tilesetFilename = tilesetFilename;
-		this.tileConfig = tileConfig;
+		this.config = config;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.worldSize = worldSize;
@@ -34,7 +34,7 @@ public class Ultima extends Game {
 		tileset = new Texture(tilesetFilename);
 		font = new BitmapFont();
 
-		tileFactory = new TileFactory(tileset, tileConfig, tileWidth, tileHeight, false);
+		tileFactory = new TileFactory(tileset, config.getTileConfig(), tileWidth, tileHeight, false);
 
 		setScreen(new MainMenuScreen(this));
 

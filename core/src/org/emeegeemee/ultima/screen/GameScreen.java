@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
 import org.emeegeemee.ultima.terrain.DiamondSquare;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
+import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
 import org.emeegeemee.ultima.world.World;
 
@@ -17,62 +18,30 @@ import org.emeegeemee.ultima.world.World;
  * Date: 11/29/2014
  */
 public class GameScreen extends ScreenAdapter {
-    public static final int TILES_WIDE = 65, TILES_HIGH = 65;
-    public static final int RADIUS = 32;
+    public static final int TILES_WIDE = 33, TILES_HIGH = 33;
+    public static final int RADIUS = 16;
 
     private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
 
     private final Vector2 pos = new Vector2(RADIUS, RADIUS);
+    private final ITile player;
 
     private final Ultima game;
     private final OrthographicCamera camera;
 
     private final World world;
 
-    private final InputProcessorQueue input;
-
     public GameScreen(final Ultima gam) {
         game = gam;
         TileFactory factory = game.getTileFactory();
 
+        player = factory.getTile(31);
         camera = new OrthographicCamera();
 
         TerrainGenerator gen = new DiamondSquare();
 
         world = new World(game.getWorldSize(), gen, factory, game.getTileWidth(), game.getTileHeight());
-
-        input = new InputProcessorQueue(new InputAdapter() {
-            @Override
-            public boolean keyUp(int keycode) {
-                switch (keycode) {
-                    case Input.Keys.UP:
-                        pos.y++;
-                        if(pos.y >= Math.pow(2, game.getWorldSize()) + 1 - RADIUS)
-                            pos.y = (float)(Math.pow(2, game.getWorldSize()) + 1 - RADIUS);
-                        return true;
-                    case Input.Keys.LEFT:
-                        pos.x--;
-                        if(pos.x < RADIUS)
-                            pos.x = RADIUS;
-                        return true;
-                    case Input.Keys.RIGHT:
-                        pos.x++;
-                        if(pos.x >= Math.pow(2, game.getWorldSize()) + 1 - RADIUS)
-                            pos.x = (float)(Math.pow(2, game.getWorldSize()) + 1 - RADIUS);
-                        return true;
-                    case Input.Keys.DOWN:
-                        pos.y--;
-                        if(pos.y < RADIUS)
-                            pos.y = RADIUS;
-                        return true;
-                }
-
-                return super.keyUp(keycode);
-            }
-        });
-
-        Gdx.input.setInputProcessor(input);
     }
 
     @Override
@@ -95,7 +64,41 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void logic() {
-        input.drain();
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            pos.y++;
+            if (pos.y > world.getHeight() - 1)
+                pos.y = world.getHeight() - 1;
+
+            if(!world.isPassable(pos))
+                pos.y--;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            pos.x--;
+            if (pos.x < 0)
+                pos.x = 0;
+
+            if(!world.isPassable(pos))
+                pos.x++;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            pos.x++;
+            if (pos.x > world.getWidth() - 1)
+                pos.x = world.getWidth() - 1;
+
+            if(!world.isPassable(pos))
+                pos.x--;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            pos.y--;
+            if (pos.y < 0)
+                pos.y = 0;
+
+            if(!world.isPassable(pos))
+                pos.y++;
+        }
     }
 
     private void draw(/*float alpha*/) {
@@ -126,6 +129,7 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
 
         world.draw(batch, pos);
+        player.draw(batch, RADIUS * tileWidth, RADIUS * tileWidth);
 
         batch.end();
     }

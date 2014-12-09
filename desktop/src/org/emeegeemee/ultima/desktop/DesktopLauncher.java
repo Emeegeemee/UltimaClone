@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.google.gson.Gson;
 import org.apache.commons.cli.*;
 import org.emeegeemee.ultima.Ultima;
+import org.emeegeemee.ultima.config.Configuration;
 import org.emeegeemee.ultima.tiles.TileConfig;
 
 import java.io.FileNotFoundException;
@@ -54,9 +55,9 @@ public class DesktopLauncher {
 		}
 
 		Gson gson = new Gson();
-		TileConfig config;
+		Configuration config;
 		try {
-			 config = gson.fromJson(new FileReader(tileConfig), TileConfig.class);
+			 config = gson.fromJson(new FileReader(tileConfig), Configuration.class);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;

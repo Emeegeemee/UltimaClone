@@ -30,20 +30,33 @@ public class TileConfig implements Iterable<Integer> {
     }
 
     public int getTileIndex(int height) {
-        ArrayList<Integer> list = new ArrayList<>(heightMap.keySet());
-        Collections.sort(list);
+        ArrayList<Map.Entry<Integer, Integer>> list = new ArrayList<>(heightMap.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                if(o1.getValue() < o2.getValue()) {
+                    return -1;
+                }
+                else if(o1.getValue() > o2.getValue()) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        });
 
-        for (Integer tileIndex : list) {
-            if (height <= heightMap.get(tileIndex)) {
-                return tileIndex;
+        for (Map.Entry<Integer, Integer> tileEntry : list) {
+            if (height <= tileEntry.getValue()) {
+                return tileEntry.getKey();
             }
         }
 
-        return list.get(list.size() - 1);
+        return list.get(list.size() - 1).getKey();
     }
 
     public String toString() {
-        return String.format("valid: %s%n opaque: %s%n passable: %s%n heightMap: %s", valid.toString(), opaque.toString(), passable.toString(), heightMap.toString());
+        return String.format("valid: %s%nopaque: %s%npassable: %s%nheightMap: %s", valid.toString(), opaque.toString(), passable.toString(), heightMap.toString());
     }
 
     @Override
