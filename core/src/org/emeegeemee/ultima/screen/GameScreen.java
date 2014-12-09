@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
+import org.emeegeemee.ultima.terrain.DiamondSquare;
+import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
 
@@ -33,9 +35,19 @@ public class GameScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         tiles = new ITile[TILES_WIDE][TILES_HIGH];
 
+        TerrainGenerator gen = new DiamondSquare();
+
+        double[][] map = new double[TILES_WIDE][TILES_HIGH];
+        map[0][0] = Math.random();
+        map[0][TILES_HIGH - 1] = Math.random();
+        map[TILES_WIDE - 1][TILES_HIGH - 1] = Math.random();
+        map[TILES_WIDE - 1][0] = Math.random();
+
+        int[][] heightMap = gen.generateTerrain(map, 1.0, 0, 255);
+
         for(int i = 0; i < TILES_WIDE; i++) {
             for(int j = 0; j < TILES_HIGH; j++) {
-                tiles[i][j] = factory.getTile(4);
+                tiles[i][j] = factory.getTileFromHeight(heightMap[i][j]);
             }
         }
     }
