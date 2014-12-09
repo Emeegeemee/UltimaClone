@@ -20,13 +20,13 @@ import org.emeegeemee.ultima.tiles.TileFactory;
 public class GameScreen extends ScreenAdapter {
     private static final int TILES_WIDE = 33, TILES_HIGH = 33;
 
-    public static final float UPDATE_STEP = 1 / 60f;
+    private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
 
     private final Ultima game;
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
 
-    private ITile[][] tiles;
+    private final ITile[][] tiles;
 
     public GameScreen(final Ultima gam) {
         game = gam;
@@ -67,11 +67,11 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    public void physics() {
+    private void physics() {
 
     }
 
-    public void logic() {
+    private void logic() {
 
     }
 

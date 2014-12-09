@@ -18,21 +18,14 @@ public class Tile
     boolean isPassable()             // Can the Avatar walk on this Tile?
  */
 public class Tile implements ITile {
-    /*private static final Texture BLACK;
 
-    static {
-        Pixmap map = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        map.setColor(0f, 0f, 0f, 1f);
-        map.fill();
-        BLACK = new Texture(map);
-    }
-    */
-
-    private TextureRegion texture;
-    private boolean opaque, passable;
+    private final TextureRegion texture;
+    private final boolean opaque, passable;
 
     public Tile(TextureRegion texture, boolean opaque, boolean passable) {
         this.texture = texture;
+        this.opaque = opaque;
+        this.passable = passable;
     }
 
     @Override

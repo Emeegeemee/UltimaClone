@@ -14,9 +14,9 @@ public class Ultima extends Game {
 	private Texture tileset;
 	private BitmapFont font;
 
-	private String tilesetFilename;
-	private TileConfig tileConfig;
-	private int tileWidth, tileHeight;
+	private final String tilesetFilename;
+	private final TileConfig tileConfig;
+	private final int tileWidth, tileHeight;
 	private TileFactory tileFactory;
 
 	public Ultima(String tilesetFilename, TileConfig tileConfig, int tileWidth, int tileHeight) {

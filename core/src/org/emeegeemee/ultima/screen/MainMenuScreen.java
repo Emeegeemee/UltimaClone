@@ -9,12 +9,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.emeegeemee.ultima.Ultima;
 
 /**
- * Created by Justin on 11/29/2014.
+ * Username: Justin
+ * Date: 11/29/2014
  */
 public class MainMenuScreen extends ScreenAdapter {
     private final Ultima game;
 
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
     private final BitmapFont.TextBounds bounds;
 
     private static final String WELCOME = "Welcome to Ultima!";

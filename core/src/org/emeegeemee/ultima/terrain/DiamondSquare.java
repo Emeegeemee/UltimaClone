@@ -132,9 +132,9 @@ public class DiamondSquare implements TerrainGenerator {
     }
 
     private class Square {
-        int x, y;
-        int length;
-        double range;
+        final int x, y;
+        final int length;
+        final double range;
 
         public Square(int x, int y, int length, double range) {
             this.x = x;
@@ -156,8 +156,8 @@ public class DiamondSquare implements TerrainGenerator {
         int[][] newMap = ds.generateTerrain(map, 0.8, 0, 255);
 
         for(int y = 0; y < newMap.length; y++) {
-            for (int x = 0; x < newMap.length; x++) {
-                System.out.printf("%3d ", newMap[x][y]);
+            for (int[] aNewMap : newMap) {
+                System.out.printf("%3d ", aNewMap[y]);
             }
             System.out.println();
         }

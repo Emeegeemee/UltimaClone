@@ -7,9 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Date: 11/29/2014
  */
 public interface ITile {
-    void draw(SpriteBatch batch, int x, int y);
-
-    boolean isOpaque();
-
-    boolean isPassable();
+    public void draw(SpriteBatch batch, int x, int y);
+    public boolean isOpaque();
+    public boolean isPassable();
 }

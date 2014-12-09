@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Date: 11/29/2014
  */
 public class VisibilityTile implements ITile {
-    private ITile tile;
+    private final ITile tile;
     private boolean lit;
 
     public VisibilityTile(ITile tile) {
@@ -28,5 +28,9 @@ public class VisibilityTile implements ITile {
     @Override
     public boolean isPassable() {
         return tile.isPassable();
+    }
+
+    public void setLit(boolean lit) {
+        this.lit = lit;
     }
 }

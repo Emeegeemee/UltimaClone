@@ -13,17 +13,6 @@ public class TileConfig implements Iterable<Integer> {
 
     private Map<Integer, Integer> heightMap;
 
-    private TileConfig() {
-
-    }
-
-    public TileConfig(Set<Integer> valid, Set<Integer> opaque, Set<Integer> passable, Map<Integer, Integer> heightMap) {
-        this.valid = valid;
-        this.opaque = opaque;
-        this.passable = passable;
-        this.heightMap = heightMap;
-    }
-
     public boolean isValid(int index) {
         return valid.contains(index);
     }
@@ -54,7 +43,7 @@ public class TileConfig implements Iterable<Integer> {
     }
 
     public String toString() {
-        return String.format("valid: %s%nopaque: %s%npassable: %s%nheightMap: %s", valid.toString(), opaque.toString(), passable.toString(), heightMap.toString());
+        return String.format("valid: %s%n opaque: %s%n passable: %s%n heightMap: %s", valid.toString(), opaque.toString(), passable.toString(), heightMap.toString());
     }
 
     @Override

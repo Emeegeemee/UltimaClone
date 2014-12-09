@@ -11,11 +11,11 @@ import java.util.Map;
  * Date: 11/29/2014
  */
 public class TileFactory {
-    private TextureRegion[] regions;
-    private TileConfig config;
-    private Map<Integer, ITile> tiles;//cache to enable flyweight
+    private final TextureRegion[] regions;
+    private final TileConfig config;
+    private final Map<Integer, ITile> tiles;//cache to enable flyweight
 
-    public TileFactory(Texture tileset, TileConfig config, int tileWidth, int tileHeight, boolean prebuild) {
+    public TileFactory(Texture tileset, TileConfig config, int tileWidth, int tileHeight, boolean preBuild) {
         TextureRegion[][] regions = TextureRegion.split(tileset, tileWidth, tileHeight);
         this.regions = new TextureRegion[regions.length * regions[0].length];
 
@@ -30,7 +30,7 @@ public class TileFactory {
         this.config = config;
         tiles = new HashMap<>(config.getNumberValid());
 
-        if(prebuild) {
+        if(preBuild) {
             buildCache();
         }
     }
