@@ -5,6 +5,7 @@ import org.emeegeemee.ultima.screen.GameScreen;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
+import org.emeegeemee.ultima.tiles.VisibilityTile;
 import org.emeegeemee.ultima.utils.Point2;
 
 import java.io.File;
@@ -16,7 +17,8 @@ import java.io.PrintWriter;
  * Date: 12/8/2014
  */
 public class World {
-    private ITile[][] tiles;
+    private VisibilityTile[][] tiles;
+    private final int[][] heightMap;
     private int tileWidth, tileHeight;
     private int radius;
 
@@ -37,30 +39,14 @@ public class World {
         map[size - 1][size - 1] = Math.random();
         map[size - 1][0] = Math.random();
 
-        int[][] heightMap = generator.generateTerrain(map, 0.5, 0, 255);
+        heightMap = generator.generateTerrain(map, 0.5, 0, 255);
 
-        tiles = new ITile[size][size];
-
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new File("testing"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        tiles = new VisibilityTile[size][size];
 
         for(int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++) {
-                tiles[i][j] = factory.getTileFromHeight(heightMap[i][j]);
-                if(writer != null)
-                    writer.printf("%3d ", heightMap[i][j]);
+                tiles[i][j] = new VisibilityTile(factory.getTileFromHeight(heightMap[i][j]));
             }
-            if(writer != null)
-                writer.println();
-        }
-
-        if(writer != null) {
-            writer.flush();
-            writer.close();
         }
     }
 
@@ -82,9 +68,54 @@ public class World {
                 int yj = y+j;
 
                 if(xi >= 0 && yj >= 0 && xi < tiles.length && yj < tiles.length)
-                    tiles[x + i][y + j].draw(batch, i * tileWidth, j * tileHeight);
+                    tiles[xi][yj].draw(batch, i * tileWidth, j * tileHeight);
             }
         }
+    }
+
+    public void light(Point2 pos, int range) {
+        int x = pos.x - radius;
+        int y = pos.y - radius;
+
+        for(int i = 0; i < GameScreen.TILES; i++) {
+            for (int j = 0; j < GameScreen.TILES; j++) {
+                int xi = x+i;
+                int yj = y+j;
+
+                if(xi >= 0 && yj >= 0 && xi < tiles.length && yj < tiles.length)
+                    tiles[xi][yj].setLit(true);
+            }
+        }
+
+        light(pos, pos.x, pos.y, range * range);
+    }
+
+    private void light(Point2 pos, int x, int y, int range) {
+        if(x < 0 || x >= tiles.length || y < 0 || y >= tiles.length || pos.dst2(x, y) > range)
+            return;
+
+        VisibilityTile tile = tiles[x][y];
+
+        if(tile.isLit())
+            return;
+
+        tile.setLit(true);
+
+        if(tile.isOpaque()) {
+            if(pos.equals(x, y)) {
+                int val = (int)Math.sqrt(range) / 2;
+                light(pos, x - 1, y, val * val);
+                light(pos, x + 1, y, val * val);
+                light(pos, x, y - 1, val * val);
+                light(pos, x, y + 1, val * val);
+            }
+            return;
+        }
+
+        light(pos, x - 1, y, range);
+        light(pos, x + 1, y, range);
+        light(pos, x, y + 1, range);
+        light(pos, x, y - 1, range);
     }
 
     public boolean isPassable(Point2 pos) {

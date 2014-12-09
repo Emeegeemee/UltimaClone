@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
 import org.emeegeemee.ultima.control.*;
+import org.emeegeemee.ultima.entities.Player;
 import org.emeegeemee.ultima.terrain.DiamondSquare;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
@@ -20,14 +21,13 @@ import org.emeegeemee.ultima.world.World;
  * Date: 11/29/2014
  */
 public class GameScreen extends ScreenAdapter {
-    public static final int TILES = (int)Math.pow(2, 7) + 1;
+    public static final int TILES = (int)Math.pow(2, 9) + 1;
     public static final int RADIUS = (TILES - 1) / 2;
 
     private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
 
-    private final Point2 pos = new Point2(RADIUS, RADIUS);
-    private final ITile player;
+    private final Player player;
 
     private final Ultima game;
     private final OrthographicCamera camera;
@@ -40,17 +40,19 @@ public class GameScreen extends ScreenAdapter {
         game = gam;
         TileFactory factory = game.getTileFactory();
 
-        player = factory.getTile(31);
         camera = new OrthographicCamera();
 
         TerrainGenerator gen = new DiamondSquare();
 
         world = new World(game.getWorldSize(), gen, factory, game.getTileWidth(), game.getTileHeight());
+
         controls = new PositionControl[4];
         controls[0] = new PositionControl(new UpExecute(Input.Keys.UP));
         controls[1] = new PositionControl(new DownExecute(Input.Keys.DOWN));
         controls[2] = new PositionControl(new RightExecute(Input.Keys.RIGHT));
         controls[3] = new PositionControl(new LeftExecute(Input.Keys.LEFT));
+
+        player = new Player(world, factory.getTile(31), new Point2(RADIUS * game.getTileWidth(), RADIUS * game.getTileWidth()));
     }
 
     @Override
@@ -72,10 +74,17 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
+    int count = 0;
+
     private void logic() {
-        for(PositionControl pc : controls) {
-            pc.updatePos(Gdx.input, world, pos);
+        if(count == 0) {
+            for (PositionControl pc : controls) {
+                pc.updatePos(Gdx.input, world, player.getPos());
+            }
         }
+        count = (count + 1) % 3;
+
+        world.light(player.getPos(), player.getRadius());
     }
 
     private void draw(/*float alpha*/) {
@@ -105,8 +114,8 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
 
-        world.draw(batch, pos);
-        player.draw(batch, RADIUS * tileWidth, RADIUS * tileWidth);
+        world.draw(batch, player.getPos());
+        player.draw(batch);
 
         batch.end();
     }

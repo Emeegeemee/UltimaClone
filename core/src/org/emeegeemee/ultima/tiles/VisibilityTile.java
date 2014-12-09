@@ -33,4 +33,8 @@ public class VisibilityTile implements ITile {
     public void setLit(boolean lit) {
         this.lit = lit;
     }
+
+    public boolean isLit() {
+        return lit;
+    }
 }

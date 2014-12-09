@@ -110,6 +110,10 @@ public class Point2 {
         return this;
     }
 
+    public boolean equals(int x, int y) {
+        return this.x == x && this.y == y;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -119,7 +123,7 @@ public class Point2 {
 
         Point2 point2 = (Point2) o;
 
-        return x == point2.x && y == point2.y;
+        return equals(point2.x, point2.y);
     }
 
     @Override
