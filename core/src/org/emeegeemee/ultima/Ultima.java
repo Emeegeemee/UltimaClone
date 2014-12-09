@@ -17,13 +17,15 @@ public class Ultima extends Game {
 	private final String tilesetFilename;
 	private final TileConfig tileConfig;
 	private final int tileWidth, tileHeight;
+	private final int worldSize;
 	private TileFactory tileFactory;
 
-	public Ultima(String tilesetFilename, TileConfig tileConfig, int tileWidth, int tileHeight) {
+	public Ultima(String tilesetFilename, TileConfig tileConfig, int tileWidth, int tileHeight, int worldSize) {
 		this.tilesetFilename = tilesetFilename;
 		this.tileConfig = tileConfig;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
+		this.worldSize = worldSize;
 	}
 
 	@Override
@@ -83,6 +85,10 @@ public class Ultima extends Game {
 
 	public int getTileHeight() {
 		return tileHeight;
+	}
+
+	public int getWorldSize() {
+		return worldSize;
 	}
 
 	public TileFactory getTileFactory() {

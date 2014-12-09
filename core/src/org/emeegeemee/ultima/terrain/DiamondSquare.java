@@ -22,7 +22,6 @@ public class DiamondSquare implements TerrainGenerator {
             Square s = queue.remove();
 
             double range = s.range;
-            Gdx.app.log("TerrainGen", "" + range);
 
             int len = s.length;
             int halfLen = len / 2;

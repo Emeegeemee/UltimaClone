@@ -1,7 +1,6 @@
 package org.emeegeemee.ultima.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,46 +9,70 @@ import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
 import org.emeegeemee.ultima.terrain.DiamondSquare;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
-import org.emeegeemee.ultima.tiles.ITile;
 import org.emeegeemee.ultima.tiles.TileFactory;
+import org.emeegeemee.ultima.world.World;
 
 /**
  * Username: Justin
  * Date: 11/29/2014
  */
 public class GameScreen extends ScreenAdapter {
-    private static final int TILES_WIDE = 33, TILES_HIGH = 33;
+    public static final int TILES_WIDE = 65, TILES_HIGH = 65;
+    public static final int RADIUS = 32;
 
     private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
 
+    private final Vector2 pos = new Vector2(RADIUS, RADIUS);
+
     private final Ultima game;
     private final OrthographicCamera camera;
 
-    private final ITile[][] tiles;
+    private final World world;
+
+    private final InputProcessorQueue input;
 
     public GameScreen(final Ultima gam) {
         game = gam;
         TileFactory factory = game.getTileFactory();
 
         camera = new OrthographicCamera();
-        tiles = new ITile[TILES_WIDE][TILES_HIGH];
 
         TerrainGenerator gen = new DiamondSquare();
 
-        double[][] map = new double[TILES_WIDE][TILES_HIGH];
-        map[0][0] = Math.random();
-        map[0][TILES_HIGH - 1] = Math.random();
-        map[TILES_WIDE - 1][TILES_HIGH - 1] = Math.random();
-        map[TILES_WIDE - 1][0] = Math.random();
+        world = new World(game.getWorldSize(), gen, factory, game.getTileWidth(), game.getTileHeight());
 
-        int[][] heightMap = gen.generateTerrain(map, 1.0, 0, 255);
+        input = new InputProcessorQueue(new InputAdapter() {
+            @Override
+            public boolean keyUp(int keycode) {
+                switch (keycode) {
+                    case Input.Keys.UP:
+                        pos.y++;
+                        if(pos.y >= Math.pow(2, game.getWorldSize()) + 1 - RADIUS)
+                            pos.y = (float)(Math.pow(2, game.getWorldSize()) + 1 - RADIUS);
+                        return true;
+                    case Input.Keys.LEFT:
+                        pos.x--;
+                        if(pos.x < RADIUS)
+                            pos.x = RADIUS;
+                        return true;
+                    case Input.Keys.RIGHT:
+                        pos.x++;
+                        if(pos.x >= Math.pow(2, game.getWorldSize()) + 1 - RADIUS)
+                            pos.x = (float)(Math.pow(2, game.getWorldSize()) + 1 - RADIUS);
+                        return true;
+                    case Input.Keys.DOWN:
+                        pos.y--;
+                        if(pos.y < RADIUS)
+                            pos.y = RADIUS;
+                        return true;
+                }
 
-        for(int i = 0; i < TILES_WIDE; i++) {
-            for(int j = 0; j < TILES_HIGH; j++) {
-                tiles[i][j] = factory.getTileFromHeight(heightMap[i][j]);
+                return super.keyUp(keycode);
             }
-        }
+        });
+
+        Gdx.input.setInputProcessor(input);
     }
 
     @Override
@@ -72,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void logic() {
-
+        input.drain();
     }
 
     private void draw(/*float alpha*/) {
@@ -102,15 +125,11 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
 
-        for(int i = 0; i < TILES_WIDE; i++) {
-            for(int j = 0; j < TILES_HIGH; j++) {
-                tiles[i][j].draw(batch, i*tileWidth, j*tileHeight);
-            }
-        }
+        world.draw(batch, pos);
 
         batch.end();
     }
-
+/*
     @Override
     public void resize(int width, int height) {
 
@@ -140,4 +159,5 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
 
     }
+*/
 }
