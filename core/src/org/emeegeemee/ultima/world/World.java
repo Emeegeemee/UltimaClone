@@ -76,8 +76,8 @@ public class World {
         int x = pos.x - radius;
         int y = pos.y - radius;
 
-        for(int i = 0; i < GameScreen.TILES_WIDE; i++) {
-            for (int j = 0; j < GameScreen.TILES_HIGH; j++) {
+        for(int i = 0; i < GameScreen.TILES; i++) {
+            for (int j = 0; j < GameScreen.TILES; j++) {
                 int xi = x+i;
                 int yj = y+j;
 

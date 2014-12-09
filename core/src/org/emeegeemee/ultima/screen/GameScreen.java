@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
+import org.emeegeemee.ultima.control.*;
 import org.emeegeemee.ultima.terrain.DiamondSquare;
 import org.emeegeemee.ultima.terrain.TerrainGenerator;
 import org.emeegeemee.ultima.tiles.ITile;
@@ -19,8 +20,8 @@ import org.emeegeemee.ultima.world.World;
  * Date: 11/29/2014
  */
 public class GameScreen extends ScreenAdapter {
-    public static final int TILES_WIDE = 33, TILES_HIGH = 33;
-    public static final int RADIUS = 16;
+    public static final int TILES = (int)Math.pow(2, 7) + 1;
+    public static final int RADIUS = (TILES - 1) / 2;
 
     private static final float UPDATE_STEP = 1 / 60f;
     private float lag = 0f;
@@ -33,6 +34,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final World world;
 
+    private final PositionControl[] controls;
+
     public GameScreen(final Ultima gam) {
         game = gam;
         TileFactory factory = game.getTileFactory();
@@ -43,6 +46,11 @@ public class GameScreen extends ScreenAdapter {
         TerrainGenerator gen = new DiamondSquare();
 
         world = new World(game.getWorldSize(), gen, factory, game.getTileWidth(), game.getTileHeight());
+        controls = new PositionControl[4];
+        controls[0] = new PositionControl(new UpExecute(Input.Keys.UP));
+        controls[1] = new PositionControl(new DownExecute(Input.Keys.DOWN));
+        controls[2] = new PositionControl(new RightExecute(Input.Keys.RIGHT));
+        controls[3] = new PositionControl(new LeftExecute(Input.Keys.LEFT));
     }
 
     @Override
@@ -65,40 +73,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void logic() {
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            pos.y++;
-            if (pos.y > world.getHeight() - 1)
-                pos.y = world.getHeight() - 1;
-
-            if(!world.isPassable(pos))
-                pos.y--;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            pos.x--;
-            if (pos.x < 0)
-                pos.x = 0;
-
-            if(!world.isPassable(pos))
-                pos.x++;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            pos.x++;
-            if (pos.x > world.getWidth() - 1)
-                pos.x = world.getWidth() - 1;
-
-            if(!world.isPassable(pos))
-                pos.x--;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            pos.y--;
-            if (pos.y < 0)
-                pos.y = 0;
-
-            if(!world.isPassable(pos))
-                pos.y++;
+        for(PositionControl pc : controls) {
+            pc.updatePos(Gdx.input, world, pos);
         }
     }
 
@@ -108,8 +84,8 @@ public class GameScreen extends ScreenAdapter {
         int tileWidth = game.getTileWidth();
         int tileHeight = game.getTileHeight();
 
-        float fixedWidth = tileWidth*TILES_WIDE; // your preferred viewWidth
-        float fixedHeight = tileHeight*TILES_HIGH; // your preferred viewHeight
+        float fixedWidth = tileWidth* TILES; // your preferred viewWidth
+        float fixedHeight = tileHeight* TILES; // your preferred viewHeight
         //very useful and easy function to get preferred width and height and still keeping the same aspect ratio :)
         Vector2 size = Scaling.fill.apply(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), fixedWidth, fixedHeight);
 
