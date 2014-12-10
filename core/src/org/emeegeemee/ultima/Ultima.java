@@ -5,12 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.emeegeemee.ultima.config.Configuration;
 import org.emeegeemee.ultima.screen.MainMenuScreen;
 import org.emeegeemee.ultima.tiles.TileFactory;
 
 public class Ultima extends Game {
 	private SpriteBatch batch;
+	private ShapeRenderer renderer;
 	private Texture tileset;
 	private BitmapFont font;
 
@@ -31,6 +33,7 @@ public class Ultima extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
+		renderer = new ShapeRenderer();
 		tileset = new Texture(tilesetFilename);
 		font = new BitmapFont();
 
@@ -73,6 +76,10 @@ public class Ultima extends Game {
 
 	public SpriteBatch getSpriteBatch() {
 		return batch;
+	}
+
+	public ShapeRenderer getRenderer() {
+		return renderer;
 	}
 
 	public BitmapFont getFont() {

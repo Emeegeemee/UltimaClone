@@ -17,6 +17,8 @@ import java.io.PrintWriter;
  * Date: 12/8/2014
  */
 public class World {
+    private static final boolean LIGHTING = false;
+
     private VisibilityTile[][] tiles;
     private final int[][] heightMap;
     private int tileWidth, tileHeight;
@@ -46,6 +48,9 @@ public class World {
         for(int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++) {
                 tiles[i][j] = new VisibilityTile(factory.getTileFromHeight(heightMap[i][j]));
+                if (!LIGHTING) {
+                    tiles[i][j].setLit(true);
+                }
             }
         }
     }
@@ -74,20 +79,22 @@ public class World {
     }
 
     public void light(Point2 pos, int range) {
-        int x = pos.x - radius;
-        int y = pos.y - radius;
+        if(LIGHTING) {
+            int x = pos.x - radius;
+            int y = pos.y - radius;
 
-        for(int i = 0; i < GameScreen.TILES; i++) {
-            for (int j = 0; j < GameScreen.TILES; j++) {
-                int xi = x+i;
-                int yj = y+j;
+            for (int i = 0; i < GameScreen.TILES; i++) {
+                for (int j = 0; j < GameScreen.TILES; j++) {
+                    int xi = x + i;
+                    int yj = y + j;
 
-                if(xi >= 0 && yj >= 0 && xi < tiles.length && yj < tiles.length)
-                    tiles[xi][yj].setLit(true);
+                    if (xi >= 0 && yj >= 0 && xi < tiles.length && yj < tiles.length)
+                        tiles[xi][yj].setLit(false);
+                }
             }
-        }
 
-        light(pos, pos.x, pos.y, range * range);
+            light(pos, pos.x, pos.y, range * range);
+        }
     }
 
     private void light(Point2 pos, int x, int y, int range) {

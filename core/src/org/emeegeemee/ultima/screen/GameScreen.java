@@ -1,9 +1,11 @@
 package org.emeegeemee.ultima.screen;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import org.emeegeemee.ultima.Ultima;
@@ -21,7 +23,7 @@ import org.emeegeemee.ultima.world.World;
  * Date: 11/29/2014
  */
 public class GameScreen extends ScreenAdapter {
-    public static final int TILES = (int)Math.pow(2, 9) + 1;
+    public static final int TILES = (int)Math.pow(2, 5) + 1;
     public static final int RADIUS = (TILES - 1) / 2;
 
     private static final float UPDATE_STEP = 1 / 60f;
@@ -47,10 +49,10 @@ public class GameScreen extends ScreenAdapter {
         world = new World(game.getWorldSize(), gen, factory, game.getTileWidth(), game.getTileHeight());
 
         controls = new PositionControl[4];
-        controls[0] = new PositionControl(new UpExecute(Input.Keys.UP));
-        controls[1] = new PositionControl(new DownExecute(Input.Keys.DOWN));
-        controls[2] = new PositionControl(new RightExecute(Input.Keys.RIGHT));
-        controls[3] = new PositionControl(new LeftExecute(Input.Keys.LEFT));
+        controls[0] = new PositionControl(new UpExecute(Input.Keys.W));
+        controls[1] = new PositionControl(new DownExecute(Input.Keys.S));
+        controls[2] = new PositionControl(new RightExecute(Input.Keys.D));
+        controls[3] = new PositionControl(new LeftExecute(Input.Keys.A));
 
         player = new Player(world, factory.getTile(31), new Point2(RADIUS * game.getTileWidth(), RADIUS * game.getTileWidth()));
     }
@@ -68,7 +70,6 @@ public class GameScreen extends ScreenAdapter {
 
         draw(/*lag / UPDATE_STEP*/); //draws the view with linear interpolation
     }
-
 
     private void physics() {
 
@@ -89,6 +90,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void draw(/*float alpha*/) {
         SpriteBatch batch = game.getSpriteBatch();
+        ShapeRenderer renderer = game.getRenderer();
 
         int tileWidth = game.getTileWidth();
         int tileHeight = game.getTileHeight();
@@ -111,6 +113,7 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
+        renderer.setProjectionMatrix(camera.combined);
 
         batch.begin();
 
@@ -118,6 +121,14 @@ public class GameScreen extends ScreenAdapter {
         player.draw(batch);
 
         batch.end();
+
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+
+        renderer.setColor(Color.YELLOW);
+        renderer.ellipse((RADIUS- (2*tileWidth / 2f - 0.5f)) * tileWidth, (RADIUS- (2*tileHeight / 2f - 0.5f)) * tileHeight, 2*tileWidth*RADIUS, 2*tileHeight*RADIUS);
+        renderer.rect(RADIUS * tileHeight, RADIUS * tileHeight, 16, 16);
+
+        renderer.end();
     }
 /*
     @Override
